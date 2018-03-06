@@ -21,7 +21,7 @@ The goals / steps of this project are the following:
 [image6]: ./output_images/Gradient Mag_Threshold.png "Gradient Magnitude Threshold"
 [image7]: ./output_images/Gradient Dir_Threshold.png "Gradient Direction Threshold"
 [image8]: ./output_images/Final Grayscale.png "Combined Gradient Threshold"
-[image9]: ./output_images/HLS S Color Filter.png "S Filter"
+[image9]: ./output_images/HLS SL Color Filter.png "S Filter"
 [image10]: ./output_images/Final Grayscale.png "Combined Gradient Threshold"
 [image11]: ./output_images/Final Grayscale.png "Combined Gradient Threshold"
 [video1]: ./project_video.mp4 "Video"
