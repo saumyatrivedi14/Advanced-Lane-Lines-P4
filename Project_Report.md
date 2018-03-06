@@ -99,13 +99,18 @@ The final warped image is shown below. the code for this is commented at the bot
 
 #### 4. Lane Line Fitting
 
-The lane finding algorithm ( Cell 10 ) is based on the 'window search' methodology shown in the Udacity lectures. The starting point of the search is identified using a histogram plot, defined in DrawHisto() function, of the non-zero data points in the binary image. Two peaks, one in left half and right half each, represent the centre of left and right lane roots respectively. Starting here, a window search is done going from bottom to top in the image, tracking co-ordinates of the pixels and storing them seperately to perform a second order polynomial fit to find the desired lane lines, this is done in the DrawSlidingWindow() function. The images below shows the histogram and the final output of the function Visualization(), which shows the lane lines along with the left lane pixels (red) and right lane pixels (blue).
+The lane finding algorithm ( Cell 10 ) is based on the 'window search' methodology shown in the Udacity lectures. The starting point of the search is identified using a histogram plot, defined in DrawHisto() function, of the non-zero data points in the binary image. Two peaks, one in left half and right half each, represent the centre of left and right lane roots respectively. Starting here, a window search is done going from bottom to top in the image, tracking co-ordinates of the pixels and storing them seperately to perform a second order polynomial fit to find the desired lane lines, this is done in the `DrawSlidingWindow()` function. The images below shows the histogram and the final output of the function `Visualization()`, which shows the lane lines along with the left lane pixels (red) and right lane pixels (blue).
 
 ![alt text][image15] ![alt text][image16]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+#### 5. Radius of Curvature and Vehicle Offset.
 
-I did this in lines # through # in my code in `my_other_file.py`
+Cell 11 in the jupyter notebook shows the radius of curvature and vehicle offset calculation. Lane width in pixels was measured in the warped image and then it was equated to pixel count to the lane width in meters, which is assumed as a standard 3.7 m here. Similarly, the length of the road patch used for perspective transform is assumed to be 30 m and the corresponding pixel count of 600 (width of warped destination image) is used to calibrate the pixel/m conversion. The standard radius of curvature expression for a second degree polynomial as shown in the Udacity lectures is used to find the radius. For video implementation, the curvature of the lane with more data points is used as the lane curvature as that lane line is more 'dominating'.
+
+Offset
+The vehicle position with respect to the lane center is calculated. The idea is to use the image center (assuming the camera is mounted at the center) and the mid point of left and right lanes and use these points to identify whether the vehicle is right or left of the lane center.
+
+both these calculations are carried out in the `FindROC()` function in Cell 11.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
