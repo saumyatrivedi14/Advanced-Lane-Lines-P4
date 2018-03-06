@@ -123,10 +123,10 @@ I have merged four images to get a better understanding and visualization of eac
 
 Cell 16-17 are the one where the whole pipeline is defined along with some extra logic to reduce wobbly lines. It checks for the dominant line based on histogram plot and based on that information it decides the current dominating lane (left/right) and assigns the radius of curvature to that line's radius of curvature. Along with this a quality check of lane lines was incorporated to eliminate lines which are outside of standard deviation window using `meanLaneWidth()` function. In that case of elimination, it would consider the previous frame value and move forward.
 
-Here's a [link to my video result](https://youtu.be/Zw9oFyG_rzs)
+Here's a [link to my video result](https://youtu.be/_vWk-v4ijOs)
 
 ---
 
 ### Discussion
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Here are some instances where I feel the pipeline might fail. The algorithm fails in catching frequent sharp turns with rapidly changing light conditions. I think improving sanity check on the lane curvature and parallelism can be the next things that can be done here to improve the detection logic. Furthermore, this algorithm may not work well in adverse driving scenarios because the thresholds tuned here would not be appropriate for those scenarios. An adaptive threshold tuning routine based on the surrounding conditions would be a way to ensure this works. Lastly, this may also not work in case of changing lanes/ hiding the lane lines.
