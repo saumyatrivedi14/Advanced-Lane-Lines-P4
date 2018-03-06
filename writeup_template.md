@@ -26,87 +26,75 @@ The goals / steps of this project are the following:
 [image11]: ./output_images/Combined_Color_Filters.png "Combined Color Filtering"
 [image12]: ./output_images/Final_Gradient_Image.png "Final Grayscale Image"
 [image13]: ./output_images/Stacked_Thresholds.png "Stacked both Thresholds"
+[image14]: ./output_images/Warped_Image.png "Warped Test Image"
+[image15]: ./output_images/Sliding_Window_Visualization.png "Sliding Window Visualization"
+
 [video1]: ./project_video.mp4 "Video"
 
 ### Camera Calibration
-
-#### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
 The code for this step is contained in the second code cell of the IPython notebook located in "./ALF_Pipeilne.ipynb".
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result [Source: Udacity Lecture Notes]: 
-
+I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result [Source: Udacity Lecture Notes]:
 ![alt text][image1]
-
 This undistorted image was given a perspective transform using cv2.getPerspectiveTransform() and warped using cv2.warpPerspective(), the code for this is in Cell 4 & 5 of jupyter notebook. . Rectangular co-ordinates from the source (undistorted image) were selected and destination (undistorted and warped image) co-ordinates were also given, so that the function can map each points on the destination image. Using the camera matrix and distortion coefficients from the first step, a Map matrix was found along with its inverse matrix to undistorted and warped the images as shown below:
-
 ![alt text][image2]
 
 ### Pipeline (Test Image)
-
 #### 1. Distortion Correction.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one below. I used cv2.undistort() function for this and it is observable from the edges of the image. the code for this is in Cell 2 & 5 of jupyter notebook. 
-
 ![alt text][image3]
-
 #### 2. Thresholding.
 
 I used a combination of color and gradient thresholds to generate a binary image. The test image selected for this is "test5.jpg"
-First step includes, gradient thresholding using Sobel Transform along X and Y axis as shown below, the part of this code is in Cell 5 using  abs_sobel_thresh() function.
-
+First step includes, gradient thresholding using Sobel Transform along X and Y axis as shown below, using  abs_sobel_thresh() function.
 ![alt text][image4]
 ![alt text][image5]
-
-Gradient Magnitude and Direction threshold were also implemented using mag_threshold() and dir_threshold() functions, as shown below. The part of this code is in Cell 5
-
+Gradient Magnitude and Direction threshold were also implemented using mag_threshold() and dir_threshold() functions, as shown below. 
 ![alt text][image6]
 ![alt text][image7]
-
 Combining these gradient thresholding techniques, the output is shown below.
-
 ![alt text][image8]
-
 To detect yellow lane I used color filters, I have used two color spaces, HSL & Lab, to filter out yellow lane with accuracy. I used Saturation threshold from HSL colorspace (I tried with both Saturation and Lightness thresholding but it was better to use Lab colorspace instead) and B threshold from Lab colorspace, which works pretty well with blue-yellow color range. both thresholding outputs are shown below.
-
 ![alt text][image9]
 ![alt text][image10]
-
-Combining both the gradient threshold and color filtered images, the final output is shown below along with stacked image of both gradient threshold and color filters seperately, green - Color Filter & blue - Gradient Threshold
-
 ![alt text][image11]
+Combining both the gradient threshold and color filtered images, the final output is shown below along with stacked image of both gradient threshold and color filters seperately, green - Color Filter & blue - Gradient Threshold
 ![alt text][image12]
+![alt text][image13]
 
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+The code for all these images are provided in Cell 8 (need to uncomment) of the Jupyter Notebook
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+#### 3. Perspective Transform
+
+The code for my perspective transform includes a function called `warping()`, which appears in lines 13 through 24 in Cell 9 of jupyter notebook.  The `warping()` function takes as inputs an image (`img`) and outputs warped image.  I chose the hardcode source and destination points in the following manner:
 
 ```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
+src = np.float32(np.array([[200,720],[600,450],[700,450],[1100,720]]))
+dest = np.float32(np.array([[350,720],[350,0],[950,0],[950,720]]))
 ```
 
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 200,720      | 350, 720        | 
+| 600,450      | 350, 0      |
+| 700,450     | 950, 0      |
+| 1100,720      | 950, 7200        |
 
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+I used mask on both sides to eliminate other lane or edge detection with hardcoded points within `warping()`
 
+```python
+pt1 = np.float32(np.array([[0,720],[0,0],[200,0],[200,720]]))
+pt2 = np.float32(np.array([[1100,720],[1100,0],[1280,0],[1280,720]]))
+```
+
+The final warped image is shown below. the code for this is commented at the bottom of Cell 9.
+![alt text][image14]
 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
