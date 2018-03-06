@@ -15,7 +15,7 @@ The goals / steps of this project are the following:
 
 [image1]: ./output_images/Test_Undistorted.png "Undistorted"
 [image2]: ./output_images/Test_Undistortion_Warping.png "Undistorted and Warped"
-[image3]: ./output_images/Undistorted Image.png "Undistorted Test Image"
+[image3]: ./output_images/Undistorted-Image.png "Undistorted Test Image"
 [image4]: ./output_images/Gradient X Threshold.png "Gradient X Threshold"
 [image5]: ./output_images/Gradient Y Threshold.png "Gradient Y Threshold"
 [image6]: ./output_images/Gradient Mag_Threshold.png "Gradient Magnitude Threshold"
