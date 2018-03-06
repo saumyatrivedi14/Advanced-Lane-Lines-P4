@@ -56,16 +56,29 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 I used a combination of color and gradient thresholds to generate a binary image. The test image selected for this is "test5.jpg"
 First step includes, gradient thresholding using Sobel Transform along X and Y axis as shown below, the part of this code is in Cell 5 using  abs_sobel_thresh() function.
+
 ![alt text][image4]
 ![alt text][image5]
+
 Gradient Magnitude and Direction threshold were also implemented using mag_threshold() and dir_threshold() functions, as shown below. The part of this code is in Cell 5
+
 ![alt text][image6]
 ![alt text][image7]
+
 Combining these gradient thresholding techniques, the output is shown below.
+
 ![alt text][image8]
+
 To detect yellow lane I used color filters, I have used two color spaces, HSL & Lab, to filter out yellow lane with accuracy. I used Saturation threshold from HSL colorspace (I tried with both Saturation and Lightness thresholding but it was better to use Lab colorspace instead) and B threshold from Lab colorspace, which works pretty well with blue-yellow color range. both thresholding outputs are shown below.
+
 ![alt text][image9]
 ![alt text][image10]
+
+Combining both the gradient threshold and color filtered images, the final output is shown below along with stacked image of both gradient threshold and color filters seperately, green - Color Filter & blue - Gradient Threshold
+
+![alt text][image11]
+![alt text][image12]
+
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
