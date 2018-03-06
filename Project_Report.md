@@ -28,49 +28,49 @@ The goals / steps of this project are the following:
 [image14]: ./output_images/Warped_Image.png "Warped Test Image"
 [image15]: ./output_images/Histogram.png "Histogram of warped Lanes"
 [image16]: ./output_images/Sliding_Window_Visualization.png "Sliding Window Visualization"
-
+[image17]: ./output_images/Panel_Output.png "Panel Output"
 [video1]: ./project_video.mp4 "Video"
 
 ### Camera Calibration
 
-The code for this step is contained in the second code cell of the IPython notebook located in "./ALF_Pipeilne.ipynb".
+The code for this step is contained in the second code cell of the IPython notebook located in `./ALF_Pipeilne.ipynb`.
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result [Source: Udacity Lecture Notes]:
 ![alt text][image1]
-This undistorted image was given a perspective transform using cv2.getPerspectiveTransform() and warped using cv2.warpPerspective(), the code for this is in Cell 4 & 5 of jupyter notebook. . Rectangular co-ordinates from the source (undistorted image) were selected and destination (undistorted and warped image) co-ordinates were also given, so that the function can map each points on the destination image. Using the camera matrix and distortion coefficients from the first step, a Map matrix was found along with its inverse matrix to undistorted and warped the images as shown below:
+This undistorted image was given a perspective transform using `cv2.getPerspectiveTransform()` and warped using `cv2.warpPerspective()`, the code for this is in `Cell 4 & 5` of jupyter notebook. . Rectangular co-ordinates from the source (undistorted image) were selected and destination (undistorted and warped image) co-ordinates were also given, so that the function can map each points on the destination image. Using the camera matrix and distortion coefficients from the first step, a Map matrix was found along with its inverse matrix to undistorted and warped the images as shown below:
 ![alt text][image2]
 
 ### Pipeline (Test Image)
 #### 1. Distortion Correction.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one below. I used cv2.undistort() function for this and it is observable from the edges of the image. the code for this is in Cell 2 & 5 of jupyter notebook. 
+To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one below. I used `cv2.undistort()` function for this and it is observable from the edges of the image. the code for this is in `Cell 2 & 5` of jupyter notebook. 
 ![alt text][image3]
 #### 2. Thresholding.
 
 I used a combination of color and gradient thresholds to generate a binary image. The test image selected for this is "test5.jpg"
-First step includes, gradient thresholding using Sobel Transform along X and Y axis as shown below, using  abs_sobel_thresh() function.
+First step includes, gradient thresholding using Sobel Transform along X and Y axis as shown below, using  `abs_sobel_thresh()` function.
 ![alt text][image4]
 ![alt text][image5]
-Gradient Magnitude and Direction threshold were also implemented using mag_threshold() and dir_threshold() functions, as shown below. 
+Gradient Magnitude and Direction threshold were also implemented using `mag_threshold()` and `dir_threshold()` functions, as shown below. 
 ![alt text][image6]
 ![alt text][image7]
 Combining these gradient thresholding techniques, the output is shown below.
 ![alt text][image8]
-To detect yellow lane I used color filters, I have used two color spaces, HSL & Lab, to filter out yellow lane with accuracy. I used Saturation threshold from HSL colorspace (I tried with both Saturation and Lightness thresholding but it was better to use Lab colorspace instead) and B threshold from Lab colorspace, which works pretty well with blue-yellow color range. both thresholding outputs are shown below.
+To detect yellow lane I used color filters, I have used two color spaces, HSL & Lab, to filter out yellow lane with accuracy. I used Saturation threshold from HSL colorspace using function `hls_select()` (I tried with both Saturation and Lightness thresholding but it was better with just Saturation threshold) and B threshold from Lab colorspace using function `lab_bthresh()`, which works pretty well with blue-yellow color range. both thresholding outputs are shown below.
 ![alt text][image9]
 ![alt text][image10]
 ![alt text][image11]
-Combining both the gradient threshold and color filtered images, the final output is shown below along with stacked image of both gradient threshold and color filters seperately, green - Color Filter & blue - Gradient Threshold
+Combining both the gradient threshold and color filtered images, the final output is shown below along with stacked image of both gradient threshold and color filters seperately, `blue - Color Filter` & `green - Gradient Threshold`
 ![alt text][image12]
 ![alt text][image13]
 
-The code for all these images are provided in Cell 8 (need to uncomment) of the Jupyter Notebook
+The code for all these images are provided in `Cell 8` (need to uncomment) of the Jupyter Notebook
 
 #### 3. Perspective Transform
 
-The code for my perspective transform includes a function called `warping()`, which appears in lines 13 through 24 in Cell 9 of jupyter notebook.  The `warping()` function takes as inputs an image (`img`) and outputs warped image.  I chose the hardcode source and destination points in the following manner:
+The code for my perspective transform includes a function called `warping()`, which appears in `lines 13 - 24` in `Cell 9` of jupyter notebook.  The `warping()` function takes as inputs an image (`img`) and outputs warped image.  I chose the hardcode source and destination points in the following manner:
 
 ```python
 src = np.float32(np.array([[200,720],[600,450],[700,450],[1100,720]]))
@@ -93,43 +93,40 @@ pt1 = np.float32(np.array([[0,720],[0,0],[200,0],[200,720]]))
 pt2 = np.float32(np.array([[1100,720],[1100,0],[1280,0],[1280,720]]))
 ```
 
-The final warped image is shown below. the code for this is commented at the bottom of Cell 9.
+The final warped image is shown below. the code for this is commented at the bottom of `Cell 9`.
 ![alt text][image14]
 
 
 #### 4. Lane Line Fitting
 
-The lane finding algorithm ( Cell 10 ) is based on the 'window search' methodology shown in the Udacity lectures. The starting point of the search is identified using a histogram plot, defined in DrawHisto() function, of the non-zero data points in the binary image. Two peaks, one in left half and right half each, represent the centre of left and right lane roots respectively. Starting here, a window search is done going from bottom to top in the image, tracking co-ordinates of the pixels and storing them seperately to perform a second order polynomial fit to find the desired lane lines, this is done in the `DrawSlidingWindow()` function. The images below shows the histogram and the final output of the function `Visualization()`, which shows the lane lines along with the left lane pixels (red) and right lane pixels (blue).
+The lane finding algorithm ( `Cell 10` ) is based on the 'window search' methodology shown in the Udacity lectures. The starting point of the search is identified using a histogram plot, defined in `DrawHisto()` function, of the non-zero data points in the binary image. Two peaks, one in left half and right half each, represent the centre of left and right lane roots respectively. Starting here, a window search is done going from bottom to top in the image, tracking co-ordinates of the pixels and storing them seperately to perform a second order polynomial fit to find the desired lane lines, this is done in the `DrawSlidingWindow()` function. The images below shows the histogram and the final output of the function `Visualization()`, which shows the lane lines along with the left lane pixels (red) and right lane pixels (blue).
 
 ![alt text][image15] ![alt text][image16]
 
 #### 5. Radius of Curvature and Vehicle Offset.
+##### Radius of Curvature
+`Cell 11` in the jupyter notebook shows the radius of curvature and vehicle offset calculation. Lane width in pixels was measured in the warped image and then it was equated to pixel count to the lane width in meters, which is assumed as a standard `3.7 m` here. Similarly, the length of the road patch used for perspective transform is assumed to be `30 m` and the corresponding pixel count of `600 (width of warped destination image)` is used to calibrate the pixel/m conversion. The standard radius of curvature expression for a second degree polynomial as shown in the Udacity lectures is used to find the radius. For video implementation, the curvature of the lane with more data points is used as the lane curvature as that lane line is more 'dominating'.
 
-Cell 11 in the jupyter notebook shows the radius of curvature and vehicle offset calculation. Lane width in pixels was measured in the warped image and then it was equated to pixel count to the lane width in meters, which is assumed as a standard 3.7 m here. Similarly, the length of the road patch used for perspective transform is assumed to be 30 m and the corresponding pixel count of 600 (width of warped destination image) is used to calibrate the pixel/m conversion. The standard radius of curvature expression for a second degree polynomial as shown in the Udacity lectures is used to find the radius. For video implementation, the curvature of the lane with more data points is used as the lane curvature as that lane line is more 'dominating'.
-
-Offset
+##### Vehicle Offset
 The vehicle position with respect to the lane center is calculated. The idea is to use the image center (assuming the camera is mounted at the center) and the mid point of left and right lanes and use these points to identify whether the vehicle is right or left of the lane center.
 
-both these calculations are carried out in the `FindROC()` function in Cell 11.
+both these calculations are carried out in the `FindROC()` function in `Cell 11`.
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+#### 6. Final Panel Output
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I have merged four images to get a better understanding and visualization of each important step of the pipeline. I have stacked four images, `top left - input image`, `bottom left - warped with lanel lines`, `bottom right - unwarped lane area and lane pixels`, `top right - final output with lane area, lane pixels, radius of curvature and vehicle offset information`. `DisplayPanel()` is the function which carries out this task, it's in `Cell 12`. Output of the "test5.jpg" is shown below.
 
-
-
+![alt text][image17]
 ---
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+Cell 16-17 are the one where the whole pipeline is defined along with some extra logic to reduce wobbly lines. It checks for the dominant line based on histogram plot and based on that information it decides the current dominating lane (left/right) and assigns the radius of curvature to that line's radius of curvature. Along with this a quality check of lane lines was incorporated to eliminate lines which are outside of standard deviation window using `meanLaneWidth()` function. In that case of elimination, it would consider the previous frame value and move forward.
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_video_with_lanes_2.mp4)
 
 ---
 
 ### Discussion
-
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
