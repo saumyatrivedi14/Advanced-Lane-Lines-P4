@@ -123,7 +123,7 @@ I have merged four images to get a better understanding and visualization of eac
 
 Cell 16-17 are the one where the whole pipeline is defined along with some extra logic to reduce wobbly lines. It checks for the dominant line based on histogram plot and based on that information it decides the current dominating lane (left/right) and assigns the radius of curvature to that line's radius of curvature. Along with this a quality check of lane lines was incorporated to eliminate lines which are outside of standard deviation window using `meanLaneWidth()` function. In that case of elimination, it would consider the previous frame value and move forward.
 
-Here's a [link to my video result](./project_video_with_lanes_2.mp4)
+Here's a [link to my video result](https://youtu.be/Zw9oFyG_rzs)
 
 ---
 
