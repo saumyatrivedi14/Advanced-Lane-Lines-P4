@@ -15,15 +15,17 @@ The goals / steps of this project are the following:
 
 [image1]: ./output_images/Test_Undistorted.png "Undistorted"
 [image2]: ./output_images/Test_Undistortion_Warping.png "Undistorted and Warped"
-[image3]: ./output_images/Undistorted-Image.png "Undistorted Test Image"
-[image4]: ./output_images/Gradient X Threshold.png "Gradient X Threshold"
-[image5]: ./output_images/Gradient Y Threshold.png "Gradient Y Threshold"
-[image6]: ./output_images/Gradient Mag_Threshold.png "Gradient Magnitude Threshold"
-[image7]: ./output_images/Gradient Dir_Threshold.png "Gradient Direction Threshold"
-[image8]: ./output_images/Final Grayscale.png "Combined Gradient Threshold"
-[image9]: ./output_images/HLS SL Color Filter.png "S Filter"
-[image10]: ./output_images/Final Grayscale.png "Combined Gradient Threshold"
-[image11]: ./output_images/Final Grayscale.png "Combined Gradient Threshold"
+[image3]: ./output_images/Undistorted_Image.png "Undistorted Test Image"
+[image4]: ./output_images/Gradient_X_Threshold.png "Gradient X Threshold"
+[image5]: ./output_images/Gradient_Y_Threshold.png "Gradient Y Threshold"
+[image6]: ./output_images/Gradient_Mag_Threshold.png "Gradient Magnitude Threshold"
+[image7]: ./output_images/Gradient_Dir_Threshold.png "Gradient Direction Threshold"
+[image8]: ./output_images/Final_Grayscale.png "Combined Gradient Threshold"
+[image9]: ./output_images/HLS_SL_Color_Filter.png "S Filter"
+[image10]: ./output_images/LAB_B_Color_Filter.png "B Filter"
+[image11]: ./output_images/Combined_Color_Filters.png "Combined Color Filtering"
+[image12]: ./output_images/Final_Gradient_Image.png "Final Grayscale Image"
+[image13]: ./output_images/Stacked_Thresholds.png "Stacked both Thresholds"
 [video1]: ./project_video.mp4 "Video"
 
 ### Camera Calibration
@@ -54,19 +56,16 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 I used a combination of color and gradient thresholds to generate a binary image. The test image selected for this is "test5.jpg"
 First step includes, gradient thresholding using Sobel Transform along X and Y axis as shown below, the part of this code is in Cell 5 using  abs_sobel_thresh() function.
-
 ![alt text][image4]
 ![alt text][image5]
-
 Gradient Magnitude and Direction threshold were also implemented using mag_threshold() and dir_threshold() functions, as shown below. The part of this code is in Cell 5
-
 ![alt text][image6]
 ![alt text][image7]
-
 Combining these gradient thresholding techniques, the output is shown below.
-
 ![alt text][image8]
-
+To detect yellow lane I used color filters, I have used two color spaces, HSL & Lab, to filter out yellow lane with accuracy. I used Saturation threshold from HSL colorspace (I tried with both Saturation and Lightness thresholding but it was better to use Lab colorspace instead) and B threshold from Lab colorspace, which works pretty well with blue-yellow color range. both thresholding outputs are shown below.
+![alt text][image9]
+![alt text][image10]
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
