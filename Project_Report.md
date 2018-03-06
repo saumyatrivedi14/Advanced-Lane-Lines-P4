@@ -26,7 +26,8 @@ The goals / steps of this project are the following:
 [image12]: ./output_images/Final_Gradient_Image.png "Final Grayscale Image"
 [image13]: ./output_images/Stacked_Thresholds.png "Stacked both Thresholds"
 [image14]: ./output_images/Warped_Image.png "Warped Test Image"
-[image15]: ./output_images/Sliding_Window_Visualization.png "Sliding Window Visualization"
+[image15]: ./output_images/Histogram.png "Histogram of warped Lanes"
+[image16]: ./output_images/Sliding_Window_Visualization.png "Sliding Window Visualization"
 
 [video1]: ./project_video.mp4 "Video"
 
@@ -96,9 +97,11 @@ The final warped image is shown below. the code for this is commented at the bot
 ![alt text][image14]
 
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+#### 4. Lane Line Fitting
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+The lane finding algorithm ( Cell 10 ) is based on the 'window search' methodology shown in the Udacity lectures. The starting point of the search is identified using a histogram plot, defined in DrawHisto() function, of the non-zero data points in the binary image. Two peaks, one in left half and right half each, represent the centre of left and right lane roots respectively. Starting here, a window search is done going from bottom to top in the image, tracking co-ordinates of the pixels and storing them seperately to perform a second order polynomial fit to find the desired lane lines, this is done in the DrawSlidingWindow() function. The images below shows the histogram and the final output of the function Visualization(), which shows the lane lines along with the left lane pixels (red) and right lane pixels (blue).
+
+![alt text][image15] ![alt text][image16]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
